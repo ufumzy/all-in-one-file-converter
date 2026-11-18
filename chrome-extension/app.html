@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CodeGreeks File Studio - Universal Converter</title>
+  <link rel="stylesheet" href="app.css">
+  <script src="js/theme_loader.js"></script>
+  <script src="lib/mammoth.js"></script>
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <div id="cg-app-root" class="cg-app">
+
+    <!-- Standalone Workspace Desktop Top Navigation -->
+    <header class="workspace-nav" id="workspace-nav">
+      <div class="workspace-nav-inner">
+        <div class="brand-cluster" id="tab-nav-brand" role="button" tabindex="0" title="CodeGreeks File Studio Home">
+          <span class="brand-emblem" data-glyph="app_logo"></span>
+          <div class="brand-titles">
+            <span class="brand-name">CodeGreeks</span>
+            <span class="brand-tagline"><i class="pulse-dot"></i>Local Studio &bull; 100% Private</span>
+          </div>
+        </div>
+        <ol class="workspace-steps" id="workspace-breadcrumbs">
+          <li data-step="upload" class="active" role="button" tabindex="0"><b>1</b>Choose File</li>
+          <li class="step-separator" data-glyph="chevron_right"></li>
+          <li data-step="configure" role="button" tabindex="0"><b>2</b>Configure</li>
+          <li class="step-separator" data-glyph="chevron_right"></li>
+          <li data-step="complete" role="button" tabindex="0"><b>3</b>Done</li>
+        </ol>
+        <div class="workspace-actions">
+          <span class="metric-pill" id="tab-metric-formats">41 Formats</span>
+          <button class="nav-icon-btn theme-toggle-btn" id="btn-workspace-theme" aria-label="Toggle Color Theme" title="Toggle Light / Dark mode" data-glyph="sun"></button>
+          <button class="nav-icon-btn" id="btn-workspace-settings" aria-label="Settings" title="Studio Preferences" data-glyph="settings"></button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Stage 1: File Ingestion & Category Selection -->
+    <section class="cg-view-stage" id="stage-upload">
+      <header class="stage-nav">
+        <div class="brand-cluster">
+          <span class="brand-emblem" data-glyph="app_logo"></span>
+          <div class="brand-titles">
+            <span class="brand-name">CodeGreeks</span>
+            <span class="brand-tagline"><i class="pulse-dot"></i>Local · 100% Private</span>
+          </div>
+        </div>
+        <div class="stage-actions">
+          <button class="nav-icon-btn" id="btn-expand-tab" aria-label="Open Full Workspace" title="Open in dedicated tab" data-glyph="external_tab"></button>
+          <button class="nav-icon-btn" id="btn-open-settings" aria-label="Settings" data-glyph="settings"></button>
+        </div>
+      </header>
+
+      <div class="workspace-grid-home">
+        <div class="home-main-col">
+          <div class="hero-header">
+            <div class="hero-badge tab-only">
+              <span class="pulse-dot"></span>
+              <span>Client-Side Transformation Studio</span>
+            </div>
+            <h1 class="hero-title">Convert Files <span class="hero-gradient">Privately</span></h1>
+            <p class="hero-description">Fast on-device converter &bull; 100% private &amp; offline</p>
+          </div>
+
+          <!-- Drag and Drop Active Zone -->
+          <div class="drop-zone-card" id="drop-trigger-box" title="Click or drop file here">
+            <div class="drop-illustration" data-glyph="upload"></div>
+            <div class="drop-text-content">
+              <span class="drop-primary-prompt">Drop your file here, or click to browse</span>
+              <span class="drop-secondary-prompt">Videos, documents, images, and audio converted on-device</span>
+            </div>
+            <div class="drop-actions-row">
+              <button class="btn-primary-action" id="btn-browse-any" type="button">
+                <span data-glyph="folder"></span> Browse Files
+              </button>
+              <button class="btn-secondary-action" id="btn-sample-demo" type="button">
+                <span data-glyph="sparkle"></span> Try Demo Sample
+              </button>
+            </div>
+            <div class="drop-format-pill-strip tab-only">
+              <span>Supports PDF, DOCX, PNG, WEBP, MP4, MP3 &amp; 35+ more</span>
+            </div>
+          </div>
+
+          <!-- Category Discovery Grid -->
+          <div class="category-section-title">
+            <div class="category-title-text">
+              <span>Explore by Media Family</span>
+            </div>
+            <span class="badge-pill" id="format-count-badge">41 Formats Supported</span>
+          </div>
+          <div class="category-grid" id="category-pills"></div>
+
+          <div class="privacy-guarantee-footer">
+            <div class="privacy-guarantee-item">
+              <span class="privacy-icon" data-glyph="shield"></span>
+              <div class="privacy-text">
+                <b>100% Private &amp; Offline</b>
+                <span>Zero cloud dependency. Everything stays securely on this machine.</span>
+              </div>
+            </div>
+            <div class="privacy-guarantee-item tab-only">
+              <span class="privacy-icon" data-glyph="sparkle"></span>
+              <div class="privacy-text">
+                <b>WebAssembly Engine</b>
+                <span>Client-side transcoding with native WebCodecs and FFmpeg.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar for Tab Mode -->
+        <aside class="workspace-sidebar" id="workspace-sidebar">
+          <div class="sidebar-card history-sidebar-card">
+            <div class="sidebar-card-head">
+              <div class="head-title-wrap">
+                <h3>Recent Conversions</h3>
+                <span class="badge-count" id="history-count-badge">0</span>
+              </div>
+              <button class="btn-clear-history" id="btn-clear-history-log" type="button" title="Clear conversion history" aria-label="Clear History">Clear</button>
+            </div>
+            <ul class="history-ledger-list" id="history-ledger-list"></ul>
+          </div>
+
+          <div class="sidebar-card quick-specs-card tab-only">
+            <div class="sidebar-card-head">
+              <h3>Studio Capabilities</h3>
+              <span class="offline-badge"><i class="pulse-dot"></i>Offline</span>
+            </div>
+            <div class="specs-grid">
+              <div class="spec-row">
+                <span class="spec-label">Format Matrix</span>
+                <span class="spec-val">41 Conversions</span>
+              </div>
+              <div class="spec-row">
+                <span class="spec-label">Privacy Model</span>
+                <span class="spec-val text-success">Local Sandbox</span>
+              </div>
+              <div class="spec-row">
+                <span class="spec-label">File Size Limit</span>
+                <span class="spec-val">Unlimited</span>
+              </div>
+              <div class="spec-row">
+                <span class="spec-label">Network Calls</span>
+                <span class="spec-val text-success">Zero (Offline)</span>
+              </div>
+            </div>
+            <div class="sidebar-brand-note">
+              <span>Engineered by </span>
+              <a href="https://codegreeks.com.ng/" target="_blank" rel="noopener">CodeGreeks Technologies</a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Stage 2: Target Configuration & Parameters -->
+    <section class="cg-view-stage" id="stage-configure" hidden>
+      <header class="stage-nav">
+        <button class="nav-icon-btn" id="btn-back-to-upload" aria-label="Back" data-glyph="back"></button>
+        <h2 class="stage-heading">Configure Output</h2>
+        <span class="nav-icon-btn ghost-spacer"></span>
+      </header>
+
+      <div class="workspace-stage-toolbar tab-only">
+        <button class="btn-stage-back" id="btn-desktop-back-upload" type="button">
+          <span data-glyph="back"></span> Back to Choose File
+        </button>
+        <div class="stage-toolbar-title">Configure Output</div>
+        <div class="stage-toolbar-info">Select target format and conversion parameters</div>
+      </div>
+
+      <div class="stage-scroll-container">
+        <div class="configure-desktop-grid">
+          <!-- Left Column: Source File & Tuning -->
+          <div class="configure-col-left">
+            <!-- Source File Card -->
+            <div class="inspector-card from-card">
+              <div class="inspector-header">
+                <span>SOURCE FILE</span>
+                <button class="btn-text-action" id="btn-change-source" type="button">Change File</button>
+              </div>
+              <div class="file-summary-row">
+                <span class="family-badge" id="src-family-badge"></span>
+                <div class="file-metadata">
+                  <div class="filename-text" id="src-filename-display"></div>
+                  <div class="file-detail-sub" id="src-meta-sub"></div>
+                </div>
+                <span class="source-extension-badge" id="src-ext-tag"></span>
+              </div>
+            </div>
+
+            <!-- Conversion Tuning Parameters -->
+            <div class="option-row" id="row-tuning-quality">
+              <div class="option-label-group">
+                <span class="option-title">Compression Profile</span>
+                <span class="option-sub">Balance size vs visual quality</span>
+              </div>
+              <div class="segmented-control" id="segment-tuning-quality">
+                <button data-val="compact" title="High compression, smaller file size">Compact</button>
+                <button data-val="balanced" title="Balanced quality and file size">Balanced</button>
+                <button data-val="pristine" title="Maximum detail, larger file size">Pristine</button>
+              </div>
+            </div>
+
+            <!-- PDF Pages Option -->
+            <div class="option-row expandable-row" id="row-page-selector">
+              <button class="expandable-header-btn" id="btn-toggle-pages" type="button">
+                <span class="option-title">Page Selection</span>
+                <span class="option-value-summary">
+                  <span id="page-range-summary">All Pages</span>
+                  <span class="chev-icon" data-glyph="chevron_right"></span>
+                </span>
+              </button>
+              <div class="expandable-drawer" id="page-range-drawer" hidden>
+                <label class="drawer-input-label" for="page-range-input">Page Range (e.g. 1-4, 7, 10)</label>
+                <input id="page-range-input" class="text-input-field" placeholder="All pages (or 1-3, 5, 8)" spellcheck="false">
+                <div class="multi-mode-row" id="row-multi-segmented">
+                  <span class="drawer-input-label">Multi-page Export Mode</span>
+                  <div class="segmented-control" id="segment-multi-mode">
+                    <button data-val="zip">ZIP Archive</button>
+                    <button data-val="individual">Individual Files</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p class="conversion-hint" id="conversion-hint-note"></p>
+          </div>
+
+          <!-- Right Column: Target Destination & Actions -->
+          <div class="configure-col-right">
+            <!-- Target Destination Card -->
+            <div class="inspector-card to-card">
+              <div class="inspector-header"><span>DESTINATION</span></div>
+              <div class="file-summary-row">
+                <input class="destination-name-input" id="dst-name-input" spellcheck="false" aria-label="Target File Name">
+                <span class="target-extension-badge" id="dst-ext-preview"></span>
+              </div>
+
+              <div class="format-selection-area">
+                <div class="format-search-bar">
+                  <span data-glyph="search" class="search-icon"></span>
+                  <input type="text" class="format-search-input" id="format-search-input" placeholder="Search formats (e.g. webp, mp4, docx)…" spellcheck="false">
+                </div>
+                <div class="format-chips-grid" id="format-chips-grid"></div>
+              </div>
+            </div>
+
+            <!-- Live Conversion Progress -->
+            <div class="progress-container" id="conversion-progress-box" hidden>
+              <div class="progress-labels">
+                <span class="activity-status" id="progress-activity-label">Converting file…</span>
+                <span class="percentage-status" id="progress-percentage-label"></span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-bar-fill" id="progress-fill-bar"></div>
+              </div>
+            </div>
+
+            <p class="keep-alive-advisory" id="keep-popup-advisory" hidden>Please keep this popup open until the conversion completes.</p>
+            <div class="error-banner" id="conversion-error-banner" hidden></div>
+
+            <button class="btn-execute-launch" id="btn-execute-conversion" type="button">
+              <span id="execute-label">Start Conversion</span>
+              <span class="launch-arrow" data-glyph="arrow_right"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stage 3: Conversion Complete -->
+    <section class="cg-view-stage" id="stage-complete" hidden>
+      <header class="stage-nav nav-end">
+        <button class="nav-icon-btn" id="btn-close-done" aria-label="Close" data-glyph="close"></button>
+      </header>
+
+      <div class="completion-desktop-container">
+        <div class="completion-hero">
+          <div class="success-ring-animation">
+            <div class="ring-pulse"></div>
+            <div class="ring-core" data-glyph="check"></div>
+          </div>
+          <h2 class="completion-title">Conversion Complete!</h2>
+          <p class="completion-subtitle" id="done-saved-caption">Your file was converted entirely on this device and saved to your Downloads.</p>
+
+          <div class="completed-result-card">
+            <span class="file-type-emblem" data-glyph="file_output"></span>
+            <div class="result-details">
+              <div class="result-filename" id="done-file-title"></div>
+              <div class="result-subtext" id="done-file-subtitle"></div>
+            </div>
+            <span class="saved-check-badge" id="badge-saved-success" data-glyph="check"></span>
+            <button class="btn-download-action" id="btn-save-again" hidden data-glyph="download" aria-label="Download File"></button>
+          </div>
+
+          <div class="conversion-metrics-strip">
+            <div class="metric-block">
+              <small>TRANSFORMATION</small>
+              <b id="stat-flow-tag"></b>
+            </div>
+            <div class="metric-block">
+              <small>OUTPUT SIZE</small>
+              <b id="stat-filesize-tag"></b>
+            </div>
+            <div class="metric-block">
+              <small>PROCESS TIME</small>
+              <b id="stat-duration-tag"></b>
+            </div>
+          </div>
+
+          <div class="complete-actions-bar">
+            <button class="btn-primary-action btn-convert-more" id="btn-convert-another" type="button">
+              <span data-glyph="refresh"></span> Convert Another File
+            </button>
+            <button class="btn-secondary-action tab-only" id="btn-tab-back-home" type="button">
+              <span data-glyph="folder"></span> Back to Dashboard
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stage 4: Settings & Configuration -->
+    <section class="cg-view-stage" id="stage-settings" hidden>
+      <header class="stage-nav">
+        <button class="nav-icon-btn" id="btn-settings-back" aria-label="Back" data-glyph="back"></button>
+        <h2 class="stage-heading">Preferences</h2>
+        <span class="nav-icon-btn ghost-spacer"></span>
+      </header>
+
+      <div class="workspace-stage-toolbar tab-only">
+        <button class="btn-stage-back" id="btn-desktop-back-settings" type="button">
+          <span data-glyph="back"></span> Back to Studio
+        </button>
+        <div class="stage-toolbar-title">Studio Preferences</div>
+        <div class="stage-toolbar-info">Customize conversion defaults, storage, and appearance</div>
+      </div>
+
+      <div class="stage-scroll-container">
+        <!-- Media Families Section -->
+        <div class="settings-group-header">
+          <h3>Media Families & Formats</h3>
+        </div>
+        <div class="segmented-control full-width" id="segment-sort-pref">
+          <button data-val="custom">Custom Order</button>
+          <button data-val="frequency">Most Used</button>
+          <button data-val="alphabetical">A–Z</button>
+        </div>
+        <ul class="settings-list-group" id="settings-family-list"></ul>
+
+        <!-- Conversion Settings Section -->
+        <div class="settings-group-header"><h3>Conversion Tuning</h3></div>
+        <div class="settings-list-group">
+          <div class="settings-row-item">
+            <span class="row-icon" data-glyph="settings"></span>
+            <div class="row-text"><b>Default Profile</b></div>
+            <div class="segmented-control" id="segment-default-quality">
+              <button data-val="compact">Compact</button>
+              <button data-val="balanced">Balanced</button>
+              <button data-val="pristine">Pristine</button>
+            </div>
+          </div>
+          <label class="settings-row-item">
+            <span class="row-icon" data-glyph="folder"></span>
+            <div class="row-text">
+              <b>Preserve Original Basename</b>
+              <small>Retains original filename without appending suffix</small>
+            </div>
+            <span class="switch-control">
+              <input type="checkbox" id="pref-preserve-basename">
+              <span class="switch-slider"></span>
+            </span>
+          </label>
+          <div class="settings-row-item">
+            <span class="row-icon" data-glyph="document"></span>
+            <div class="row-text">
+              <b>Multi-Page PDF Output</b>
+              <small>Default packaging mode for page images</small>
+            </div>
+            <div class="segmented-control" id="segment-default-multi">
+              <button data-val="zip">ZIP</button>
+              <button data-val="individual">Separate</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Storage & Downloads Section -->
+        <div class="settings-group-header"><h3>Storage & Downloads</h3></div>
+        <div class="settings-list-group">
+          <label class="settings-row-item">
+            <span class="row-icon" data-glyph="download"></span>
+            <div class="row-text">
+              <b>Auto-Download Files</b>
+              <small>Automatically triggers download when complete</small>
+            </div>
+            <span class="switch-control">
+              <input type="checkbox" id="pref-auto-download">
+              <span class="switch-slider"></span>
+            </span>
+          </label>
+          <div class="settings-expandable-item">
+            <button class="settings-row-item clickable-row" id="btn-folder-expand">
+              <span class="row-icon" data-glyph="folder"></span>
+              <div class="row-text">
+                <b>Save Destination Subfolder</b>
+                <small id="folder-summary-display">Downloads (Root)</small>
+              </div>
+              <span class="row-chev" data-glyph="chevron_right"></span>
+            </button>
+            <div class="settings-expansion-content" id="folder-config-box" hidden>
+              <label class="drawer-input-label" for="pref-custom-subfolder">Subfolder within Downloads</label>
+              <div class="prefix-input-wrap">
+                <span class="prefix-tag">Downloads /</span>
+                <input id="pref-custom-subfolder" class="text-input-field" spellcheck="false" placeholder="Converted">
+              </div>
+            </div>
+          </div>
+          <label class="settings-row-item">
+            <span class="row-icon" data-glyph="shield"></span>
+            <div class="row-text">
+              <b>Prompt on File Collision</b>
+              <small>Ask before replacing an existing file</small>
+            </div>
+            <span class="switch-control">
+              <input type="checkbox" id="pref-prompt-overwrite">
+              <span class="switch-slider"></span>
+            </span>
+          </label>
+        </div>
+
+        <!-- Appearance & Studio Info -->
+        <div class="settings-group-header"><h3>Appearance & About</h3></div>
+        <div class="settings-list-group">
+          <div class="settings-row-item">
+            <span class="row-icon" data-glyph="sun"></span>
+            <div class="row-text"><b>Color Theme</b></div>
+            <div class="segmented-control" id="segment-theme-pref">
+              <button data-val="light">Light</button>
+              <button data-val="dark">Dark</button>
+              <button data-val="auto">Auto</button>
+            </div>
+          </div>
+          <div class="settings-expandable-item">
+            <button class="settings-row-item clickable-row" id="btn-about-expand">
+              <span class="row-icon brand-tint" data-glyph="app_logo"></span>
+              <div class="row-text">
+                <b>CodeGreeks Studio</b>
+                <small id="app-version-caption">Universal File Studio</small>
+              </div>
+              <span class="row-chev" data-glyph="chevron_right"></span>
+            </button>
+            <div class="settings-expansion-content about-box" id="about-info-box" hidden>
+              <p>Universal client-side file transformation studio engineered by <a href="https://codegreeks.com.ng/" target="_blank" rel="noopener" class="about-brand-link">CodeGreeks Technologies</a>.</p>
+              <p class="about-tagline">Custom Software &bull; AI Agents &bull; BI &amp; Analytics &bull; Tools &amp; Scripts</p>
+              <p>Every transformation executes inside your browser sandbox. Your files never touch external servers and the extension is completely functional offline.</p>
+              <p class="about-libraries">Engine powered by Mediabunny, FFmpeg.wasm, PDF.js, PDF-lib, Mammoth, Marked, Libheif, and Fflate.</p>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-text-action btn-reset-defaults" id="btn-reset-preferences">
+          <span data-glyph="refresh"></span> Reset Preferences to Defaults
+        </button>
+      </div>
+    </section>
+
+    <!-- Global Drop Curtain Overlay -->
+    <div class="cg-drop-curtain" id="cg-drop-curtain" hidden>
+      <div class="curtain-message">
+        <span class="curtain-glyph" data-glyph="upload"></span>
+        <span>Release to Convert</span>
+      </div>
+    </div>
+
+    <!-- Hidden Master File Input -->
+    <input type="file" id="master-file-picker" hidden>
+
+    <!-- Global Toast Banner -->
+    <div class="cg-toast" id="cg-toast" hidden></div>
+
+  </div>
+</body>
+</html>
